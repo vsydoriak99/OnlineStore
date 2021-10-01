@@ -1,7 +1,9 @@
 from faker import Faker
 
+from entities.base_entity import BaseEntity
 
-class User(object):
+
+class User(BaseEntity):
 
     def __init__(self, first_name: str, last_name: str, age: int, has_children_under_sixteen: bool, gender: str,
                  job: str, address: str, email: str):
@@ -14,11 +16,8 @@ class User(object):
         self.address = address
         self.email = email
 
-    def to_json(self) -> dict:
-        return self.__dict__
-
     @staticmethod
-    def generateRandomUser():
+    def generateRandom():
         fake = Faker()
         gender = fake.random_element(elements=('F', 'M'))
         first_name = fake.first_name_female() if gender == 'F' else fake.first_name_male()
