@@ -1,0 +1,104 @@
+# fuzziness query 
+GET /user/_search
+{
+  "query":{
+    "match": {
+      "job": {
+        "query":"sistem devalper",
+        "fuzziness": 2,
+        "prefix_length": 1
+      }
+    }
+  }
+}
+
+# multi_match query 
+GET /user/_search
+{
+  "size": 20, 
+  "query": {
+    "multi_match" : {
+      "query":    "Latasha Rivera analyst", 
+      "fields": [ "*_name^3", "address" ,"job^2"] 
+    }
+  }
+
+
+# bool query 
+GET /user/_search
+{
+  "from": 50,
+  "size": 20, 
+  "query":
+  {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "age": {
+              "gte": 30
+            }
+          }
+        }
+      ],
+      "should": [
+        {"match": {"address": "VA" }},
+        {"match": {"job": "engineer "}},
+        {"match": {"gender":  "M"}}
+      ],
+      "minimum_should_match": 2,
+      "boost": 1
+    }
+  }
+}
+
+
+
+
+# with aggregation
+GET /user/_search
+{
+  "size": 0, 
+  "aggs": {
+    "agg by gender": {
+      "terms": {
+        "field": "gender"
+      },
+      "aggs": {
+        "min_age": {
+          "min": {
+            "field": "age"
+          }
+        },
+        "max_age": {
+          "max": {
+            "field": "age"
+          }
+        }
+      }
+    }
+  }
+}
+
+
+# agregation gender and children
+GET /user/_search
+{
+  "size": 0, 
+  "aggs": {
+    "agg by gender": {
+      "terms": {
+        "field": "gender"
+      },
+      "aggs": {
+        "children": {
+          "terms": {
+            "field": "has_children_under_sixteen"
+          }
+        }
+      }
+    }
+  }
+}
+
+
